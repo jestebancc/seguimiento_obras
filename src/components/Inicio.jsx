@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { fetchProjects, fetchCollaborators } from "../utils/api";
+import { loadTrackings } from "../utils/dummyData";
 import { 
   Briefcase, 
   Users, 
@@ -9,7 +11,26 @@ import {
   Activity
 } from "lucide-react";
 
-export default function Inicio({ projects, collaborators, trackings = [], setCurrentTab }) {
+export default function Inicio({ setCurrentTab }) {
+  const [projects, setProjects] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
+  const [trackings, setTrackings] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const projs = await fetchProjects();
+        const colabs = await fetchCollaborators();
+        setProjects(Array.isArray(projs) ? projs : []);
+        setCollaborators(Array.isArray(colabs) ? colabs : []);
+        setTrackings(loadTrackings());
+      } catch (error) {
+        console.error("Error fetching data for Dashboard", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   // 1. Calculate KPI Metrics
   const totalProjects = projects.length;
   const totalCollaborators = collaborators.length;
