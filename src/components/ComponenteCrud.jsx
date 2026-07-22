@@ -5,24 +5,21 @@ import ConfirmDialog from "./ConfirmDialog";
 
 // Helper to handle local storage fallback for trackings
 import { loadTrackings, saveTrackings } from "../utils/dummyData";
+import api from '../helper/axiosHelper';
 
-export default function ComponenteCrud({ config }) {
+export default function ComponenteCrud({ config, queryParams = {} }) {
   const { title, endpoint, columns, fields } = config;
 
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  
-  // Modals state
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [currentItemId, setCurrentItemId] = useState(null);
-  
-  // Form State
+
   const [formData, setFormData] = useState({});
-  // External options cache for fields that have `optionsEndpoint`
   const [externalOptions, setExternalOptions] = useState({});
 
-  // Auth Headers
   const headers = {
     "Content-Type": "application/json",
     "user_role": "administrador",
@@ -30,17 +27,42 @@ export default function ComponenteCrud({ config }) {
     "user_id": "00000000-0000-0000-0000-000000000000"
   };
 
-  // --- DATA FETCHING ---
-  const fetchData = async () => {
-    if (endpoint.startsWith("local://")) {
-      setData(loadTrackings());
-      return;
-    }
+  const buildUrl = (base, id = null) => {
+    debugger;
+    if (base.startsWith("local://")) return id ? `${base}/${id}` : base;
     try {
-      const response = await fetch(endpoint, { method: "GET", headers });
-      if (response.ok) {
-        const json = await response.json();
-        setData(Array.isArray(json) ? json : []);
+      const url = new URL(base, window.location.origin); // handle relative URLs
+      if (id) {
+        url.pathname = url.pathname.replace(/\/$/, '') + '/' + id;
+      }
+      // Append dynamic queryParams
+      Object.keys(queryParams).forEach(key => {
+        if (queryParams[key]) {
+          url.searchParams.set(key, queryParams[key]);
+        }
+      });
+      return url.toString();
+    } catch (e) {
+      let [path, query] = base.split('?');
+      path = path.replace(/\/$/, '');
+      if (id) path += '/' + id;
+
+      const searchParams = new URLSearchParams(query || "");
+      Object.keys(queryParams).forEach(key => {
+        if (queryParams[key]) searchParams.set(key, queryParams[key]);
+      });
+      const newQuery = searchParams.toString();
+
+      return newQuery ? `${path}?${newQuery}` : path;
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await api.get(buildUrl(endpoint));
+      if (response?.data?.success) {
+        const json = response.data;
+        setData(Array.isArray(json.data) ? json.data : []);
       }
     } catch (err) {
       console.error(`Error fetching data from ${endpoint}`, err);
@@ -136,7 +158,7 @@ export default function ComponenteCrud({ config }) {
     try {
       if (currentItemId) {
         // UPDATE
-        const res = await fetch(`${endpoint}/${currentItemId}`, {
+        const res = await fetch(buildUrl(endpoint, currentItemId), {
           method: "PATCH",
           headers,
           body: JSON.stringify(payload)
@@ -144,7 +166,7 @@ export default function ComponenteCrud({ config }) {
         if (res.ok) fetchData();
       } else {
         // CREATE
-        const res = await fetch(endpoint, {
+        const res = await fetch(buildUrl(endpoint), {
           method: "POST",
           headers,
           body: JSON.stringify(payload)
@@ -167,7 +189,7 @@ export default function ComponenteCrud({ config }) {
     }
 
     try {
-      const res = await fetch(`${endpoint}/${currentItemId}`, {
+      const res = await fetch(buildUrl(endpoint, currentItemId), {
         method: "DELETE",
         headers
       });
@@ -201,7 +223,7 @@ export default function ComponenteCrud({ config }) {
   const filteredData = data.filter(item => {
     // Basic search filtering string values
     if (!searchTerm) return true;
-    return Object.values(item).some(v => 
+    return Object.values(item).some(v =>
       String(v).toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
@@ -214,17 +236,17 @@ export default function ComponenteCrud({ config }) {
         <div style={{ display: "flex", gap: "1rem" }}>
           <div className="search-input-wrapper">
             <Search size={18} className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Buscar..." 
+            <input
+              type="text"
+              placeholder="Buscar..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ paddingLeft: "2.5rem" }}
             />
           </div>
-          <button className="btn btn-primary" onClick={handleOpenCreate}>
+          {/*<button className="btn btn-primary" onClick={handleOpenCreate}>
             <Plus size={18} /> Nuevo
-          </button>
+          </button>*/}
         </div>
       </div>
 
@@ -260,8 +282,8 @@ export default function ComponenteCrud({ config }) {
       </div>
 
       {/* DYNAMIC FORM MODAL */}
-      <Modal 
-        isOpen={isFormOpen} 
+      <Modal
+        isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
         title={currentItemId ? `Editar ${title}` : `Nuevo ${title}`}
       >
@@ -269,9 +291,9 @@ export default function ComponenteCrud({ config }) {
           {fields.map(field => (
             <div key={field.name} className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <label style={{ fontWeight: "600", fontSize: "0.9rem" }}>{field.label} {field.required && "*"}</label>
-              
+
               {field.type === "text" || field.type === "email" || field.type === "number" || field.type === "date" ? (
-                <input 
+                <input
                   type={field.type}
                   className="form-control"
                   required={field.required}
@@ -312,9 +334,9 @@ export default function ComponenteCrud({ config }) {
                 <div style={{ display: "flex", gap: "1rem" }}>
                   {field.options.map((opt, i) => (
                     <label key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <input 
-                        type="radio" 
-                        name={field.name} 
+                      <input
+                        type="radio"
+                        name={field.name}
                         value={opt.value}
                         checked={formData[field.name] === opt.value}
                         onChange={(e) => handleFormChange(field.name, e.target.value)}
@@ -327,7 +349,7 @@ export default function ComponenteCrud({ config }) {
                 <div style={{ maxHeight: "150px", overflowY: "auto", background: "rgba(0,0,0,0.2)", padding: "0.5rem", borderRadius: "8px", border: "1px solid var(--border-light)" }}>
                   {externalOptions[field.name]?.map(opt => (
                     <label key={opt[field.optionValue]} style={{ display: "block", marginBottom: "0.5rem", cursor: "pointer" }}>
-                      <input 
+                      <input
                         type="checkbox"
                         checked={(formData[field.name] || []).includes(opt[field.optionValue])}
                         onChange={() => handleMultiselectToggle(field.name, opt[field.optionValue])}
@@ -349,7 +371,7 @@ export default function ComponenteCrud({ config }) {
       </Modal>
 
       {/* DELETE CONFIRMATION */}
-      <ConfirmDialog 
+      <ConfirmDialog
         isOpen={isDeleteOpen}
         onCancel={() => setIsDeleteOpen(false)}
         onConfirm={handleConfirmDelete}

@@ -30,8 +30,8 @@ export default function Navbar({ currentTab, isSidebarOpen, setIsSidebarOpen }) 
   return (
     <header className="navbar">
       <div className="navbar-left">
-        <button 
-          className="mobile-toggle-btn" 
+        <button
+          className="mobile-toggle-btn"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           title="Toggle Menú"
         >
@@ -46,10 +46,10 @@ export default function Navbar({ currentTab, isSidebarOpen, setIsSidebarOpen }) 
           <span>{currentDate}</span>
         </div>
 
-        <button className="navbar-notification-btn" title="Notificaciones">
+        {/*<button className="navbar-notification-btn" title="Notificaciones">
           <Bell size={18} />
           <span className="notification-badge-dot"></span>
-        </button>
+        </button>*/}
 
         <div className="navbar-profile">
           <div className="profile-avatar">JC</div>

@@ -10,10 +10,10 @@ export const proyectosConfig = {
   fields: [
     { name: "name", label: "Nombre del Proyecto", type: "text", required: true },
     { name: "description", label: "Descripción / Alcance", type: "textarea" },
-    { 
-      name: "category", 
-      label: "Categoría", 
-      type: "select", 
+    {
+      name: "category",
+      label: "Categoría",
+      type: "select",
       options: [
         { label: "Residencial", value: "Residencial" },
         { label: "Comercial", value: "Comercial" },
@@ -25,10 +25,10 @@ export const proyectosConfig = {
     { name: "budget", label: "Presupuesto Estimado (S/.)", type: "number", required: true },
     { name: "startDate", label: "Fecha de Inicio", type: "date", required: true },
     { name: "endDate", label: "Fecha Límite", type: "date", required: true },
-    { 
-      name: "collaborators", 
-      label: "Equipo Asignado", 
-      type: "multiselect", 
+    {
+      name: "collaborators",
+      label: "Equipo Asignado",
+      type: "multiselect",
       optionsEndpoint: "https://keeping-murray-wage-attraction.trycloudflare.com/webhook-test/usuarios-cliente",
       optionLabel: "name",
       optionValue: "id"
@@ -58,10 +58,10 @@ export const colaboradoresConfig = {
   ],
   fields: [
     { name: "name", label: "Nombre Completo", type: "text", required: true },
-    { 
-      name: "role", 
-      label: "Cargo / Especialidad", 
-      type: "select", 
+    {
+      name: "role",
+      label: "Cargo / Especialidad",
+      type: "select",
       options: [
         { label: "Arquitecto Principal", value: "Arquitecto Principal" },
         { label: "Ingeniero Civil", value: "Ingeniero Civil" },
@@ -76,10 +76,10 @@ export const colaboradoresConfig = {
     },
     { name: "email", label: "Correo Electrónico", type: "email", required: true },
     { name: "phone", label: "Teléfono Celular", type: "text" },
-    { 
-      name: "status", 
-      label: "Estado de Actividad", 
-      type: "radio", 
+    {
+      name: "status",
+      label: "Estado de Actividad",
+      type: "radio",
       options: [
         { label: "Activo", value: "activo" },
         { label: "Inactivo", value: "inactivo" }
@@ -90,21 +90,21 @@ export const colaboradoresConfig = {
 };
 
 export const seguimientosConfig = {
-  title: "Bitácora de Seguimientos",
+  title: "Seguimientos de obra",
   // No endpoint existed for this, using local storage mocked in ComponenteCrud or a placeholder
-  endpoint: "local://seguimientos", 
+  endpoint: import.meta.env.VITE_API_URL + "/seguimientos",
   columns: [
-    { key: "projectId", label: "Proyecto", type: "foreign", foreignEndpoint: "https://keeping-murray-wage-attraction.trycloudflare.com/webhook-test/proyectos", foreignLabel: "name" },
-    { key: "date", label: "Fecha", type: "date" },
-    { key: "progress", label: "Avance %", type: "progress" },
-    { key: "status", label: "Estado", type: "badge" }
+    { key: "nombre_proyecto", label: "Proyecto", type: "text" },
+    { key: "texto", label: "Seguimiento", type: "text" },
+    { key: "fecha_registro", label: "Fecha", type: "date" },
+    { key: "usuario_registra", label: "Usuario registra", type: "text" }
   ],
   fields: [
-    { 
-      name: "projectId", 
-      label: "Proyecto Relacionado", 
-      type: "select", 
-      optionsEndpoint: "https://keeping-murray-wage-attraction.trycloudflare.com/webhook-test/proyectos",
+    /*{
+      name: "projectId",
+      label: "Proyecto Relacionado",
+      type: "select",
+      //optionsEndpoint: "https://keeping-murray-wage-attraction.trycloudflare.com/webhook-test/proyectos",
       optionLabel: "name",
       optionValue: "id",
       required: true
@@ -113,25 +113,25 @@ export const seguimientosConfig = {
     { name: "description", label: "Descripción de Avances", type: "textarea", required: true },
     { name: "progress", label: "Porcentaje de Avance Físico (%)", type: "number", required: true },
     { name: "budgetSpent", label: "Presupuesto Ejecutado (S/.)", type: "number" },
-    { 
-      name: "collaboratorId", 
-      label: "Supervisor Responsable", 
-      type: "select", 
-      optionsEndpoint: "https://keeping-murray-wage-attraction.trycloudflare.com/webhook-test/usuarios-cliente",
+    {
+      name: "collaboratorId",
+      label: "Supervisor Responsable",
+      type: "select",
+      //optionsEndpoint: "https://keeping-murray-wage-attraction.trycloudflare.com/webhook-test/usuarios-cliente",
       optionLabel: "name",
       optionValue: "id",
       required: true
     },
-    { 
-      name: "status", 
-      label: "Estado Actual", 
-      type: "select", 
+    {
+      name: "status",
+      label: "Estado Actual",
+      type: "select",
       options: [
         { label: "Al Día (Normal)", value: "normal" },
         { label: "Con Retraso", value: "retraso" },
         { label: "Crítico", value: "critico" }
       ],
       required: true
-    }
+    }*/
   ]
 };

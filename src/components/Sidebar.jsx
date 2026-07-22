@@ -1,8 +1,8 @@
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  Users, 
-  ChevronLeft, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  Users,
+  ChevronLeft,
   ChevronRight,
   HardHat,
   ClipboardList
@@ -11,8 +11,8 @@ import {
 export default function Sidebar({ currentTab, setCurrentTab, isCollapsed, setIsCollapsed }) {
   const menuItems = [
     { id: "inicio", label: "Inicio", icon: LayoutDashboard },
-    { id: "proyectos", label: "Proyectos", icon: Briefcase },
-    { id: "colaboradores", label: "Colaboradores", icon: Users },
+    /*{ id: "proyectos", label: "Proyectos", icon: Briefcase },
+    { id: "colaboradores", label: "Colaboradores", icon: Users },*/
     { id: "seguimientos", label: "Seguimientos", icon: ClipboardList }
   ];
 
@@ -46,8 +46,8 @@ export default function Sidebar({ currentTab, setCurrentTab, isCollapsed, setIsC
         </ul>
       </nav>
 
-      <button 
-        onClick={() => setIsCollapsed(!isCollapsed)} 
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
         className="sidebar-collapse-btn"
         title={isCollapsed ? "Expandir Menú" : "Colapsar Menú"}
       >
