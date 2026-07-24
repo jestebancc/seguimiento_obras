@@ -1,5 +1,5 @@
 # Stage 1: Build the React application
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -23,7 +23,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the built assets from the builder stage
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html/gestion-obras
 
 # Optional: Si usas React Router con history mode, podrías necesitar configurar Nginx.
 # Como Vite y React suelen manejar rutas en el cliente, 
