@@ -10,7 +10,7 @@ import {
 
 export default function Sidebar({ currentTab, setCurrentTab, isCollapsed, setIsCollapsed }) {
   const menuItems = [
-    { id: "inicio", label: "Inicio", icon: LayoutDashboard },
+    //{ id: "inicio", label: "Inicio", icon: LayoutDashboard },
     /*{ id: "proyectos", label: "Proyectos", icon: Briefcase },
     { id: "colaboradores", label: "Colaboradores", icon: Users },*/
     { id: "seguimientos", label: "Seguimientos", icon: ClipboardList }

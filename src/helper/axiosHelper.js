@@ -49,29 +49,17 @@ export const createAxiosInstance = (baseURL) => {
                             const refreshResponse = await refreshTokenSession(refreshToken);
 
                             if (refreshResponse && refreshResponse.access_token) {
-                                // Update tokens
                                 currentAuthContextData.access_token = refreshResponse.access_token;
                                 if (refreshResponse.refresh_token) {
                                     currentAuthContextData.refresh_token = refreshResponse.refresh_token;
                                 }
-
-                                // Update header and retry request
-                                //originalRequest.headers['Authorization'] = `Bearer ${refreshResponse.access_token}`;
-                                //return instance(originalRequest);
                             }
                         }
                     }
                 } catch (e) {
                     console.log("Error refreshing token", e);
                 }
-
-                // If refresh fails or no refresh token, logout
-                // Force a complete page reload to reset the React Context memory
-                if (window.location.pathname !== '/') {
-                    window.location.href = '/';
-                } else {
-                    window.location.reload();
-                }
+                window.location.reload();
             }
             return Promise.reject(error);
         }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { HardHat, Phone, KeyRound } from "lucide-react";
-import { generateAuthCode, verifyAuthCode } from '../services/auth';
+import { generateAuthCode, verifyAuthCode } from '../../services/auth';
 import { toast } from 'react-toastify';
 
 export default function Login({ onLogin }) {
@@ -27,8 +27,6 @@ export default function Login({ onLogin }) {
       let respVerifyCode = await verifyAuthCode(whatsapp, code);
 
       if (respVerifyCode?.success == true) {
-        localStorage.setItem('token', respVerifyCode?.access_token);
-        
         const newUserData = {
           phone: whatsapp,
           ...respVerifyCode

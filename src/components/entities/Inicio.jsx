@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { fetchProjects, fetchCollaborators } from "../utils/api";
-import { loadTrackings } from "../utils/dummyData";
-import { 
-  Briefcase, 
-  Users, 
-  DollarSign, 
-  TrendingUp, 
-  Calendar, 
+import { fetchProjects, fetchCollaborators } from "../../services/api";
+import {
+  Briefcase,
+  Users,
+  DollarSign,
+  TrendingUp,
+  Calendar,
   ArrowRight,
   Activity
 } from "lucide-react";
@@ -36,10 +35,10 @@ export default function Inicio({ setCurrentTab }) {
   const totalCollaborators = collaborators.length;
   const totalTrackings = trackings.length;
   const recentTrackings = [...trackings].slice(-3).reverse();
-  
+
   const totalBudget = projects.reduce((sum, p) => sum + Number(p.budget || 0), 0);
   const activeProjectsCount = projects.filter(p => p.status === "progreso").length;
-  
+
   // Format currency
   const formatCurrency = (val) => {
     return new Intl.NumberFormat("es-PE", {
@@ -51,13 +50,13 @@ export default function Inicio({ setCurrentTab }) {
   };
 
   // Percentage calculations for graphical widgets
-  const progressPercent = totalProjects > 0 
-    ? Math.round((activeProjectsCount / totalProjects) * 100) 
+  const progressPercent = totalProjects > 0
+    ? Math.round((activeProjectsCount / totalProjects) * 100)
     : 0;
 
   const activeColabsCount = collaborators.filter(c => c.status === "activo").length;
-  const colabsPercent = totalCollaborators > 0 
-    ? Math.round((activeColabsCount / totalCollaborators) * 100) 
+  const colabsPercent = totalCollaborators > 0
+    ? Math.round((activeColabsCount / totalCollaborators) * 100)
     : 0;
 
   // Recent lists
@@ -75,7 +74,7 @@ export default function Inicio({ setCurrentTab }) {
   // Circular progress stroke calculation
   const strokeRadius = 50;
   const strokeCircumference = 2 * Math.PI * strokeRadius;
-  
+
   const getStrokeDashOffset = (percent) => {
     return strokeCircumference - (percent / 100) * strokeCircumference;
   };
@@ -145,17 +144,17 @@ export default function Inicio({ setCurrentTab }) {
         <div className="glass-panel col-12 col-lg-6" style={{ padding: "1.5rem", gridColumn: "span 6", display: "flex", flexDirection: "column", minWidth: "300px" }}>
           <h3 className="section-title">Distribución y Rendimiento</h3>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", gap: "2rem", margin: "auto 0" }}>
-            
+
             {/* Project Progress Widget */}
             <div style={{ textAlign: "center" }}>
               <div className="circular-progress">
                 <svg>
                   <circle className="bg-circle" cx="60" cy="60" r={strokeRadius} />
-                  <circle 
-                    className="progress-circle" 
-                    cx="60" 
-                    cy="60" 
-                    r={strokeRadius} 
+                  <circle
+                    className="progress-circle"
+                    cx="60"
+                    cy="60"
+                    r={strokeRadius}
                     strokeDasharray={strokeCircumference}
                     strokeDashoffset={getStrokeDashOffset(progressPercent)}
                   />
@@ -174,11 +173,11 @@ export default function Inicio({ setCurrentTab }) {
               <div className="circular-progress">
                 <svg>
                   <circle className="bg-circle" cx="60" cy="60" r={strokeRadius} />
-                  <circle 
-                    className="progress-circle" 
-                    cx="60" 
-                    cy="60" 
-                    r={strokeRadius} 
+                  <circle
+                    className="progress-circle"
+                    cx="60"
+                    cy="60"
+                    r={strokeRadius}
                     strokeDasharray={strokeCircumference}
                     strokeDashoffset={getStrokeDashOffset(colabsPercent)}
                     style={{ stroke: "var(--accent-secondary)" }}
@@ -243,9 +242,9 @@ export default function Inicio({ setCurrentTab }) {
             ) : (
               recentCollaborators.map((c) => (
                 <div key={c.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem 1rem", borderRadius: "12px", background: "rgba(255,255,255,0.01)", border: "1px solid var(--border-light)" }}>
-                  <div className="avatar-wrapper" style={{ 
-                    width: "36px", 
-                    height: "36px", 
+                  <div className="avatar-wrapper" style={{
+                    width: "36px",
+                    height: "36px",
                     fontSize: "0.8rem",
                     background: c.status === "activo" ? "linear-gradient(135deg, var(--accent-primary), #0d9488)" : "var(--bg-tertiary)",
                     border: c.status === "activo" ? "none" : "1px solid var(--border-light)"
@@ -287,7 +286,7 @@ export default function Inicio({ setCurrentTab }) {
                   critico: { class: "badge-danger", label: "Crítico" }
                 };
                 const statusDetails = statusMapLocal[t.status] || { class: "badge-info", label: t.status };
-                
+
                 return (
                   <div key={t.id} style={{
                     display: "flex",

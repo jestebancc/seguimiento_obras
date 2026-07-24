@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "./contexts/AuthContext";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
-import Inicio from "./components/Inicio";
-import ComponenteCrud from "./components/ComponenteCrud";
-import Login from "./components/Login";
+import Sidebar from "./components/general/Sidebar";
+import Navbar from "./components/general/Navbar";
+import Inicio from "./components/entities/Inicio";
+import ComponenteCrud from "./components/general/ComponenteCrud";
+import SeguimientosCrud from "./components/entities/SeguimientosCrud";
+import Login from "./components/entities/Login";
 import { proyectosConfig, colaboradoresConfig, seguimientosConfig } from "./config/crudConfigs";
 
 export default function App() {
@@ -23,7 +24,7 @@ export default function App() {
       case "inicio":
         return <Inicio setCurrentTab={setCurrentTab} />;
       case "seguimientos":
-        return <ComponenteCrud config={seguimientosConfig} queryParams={{ e164: userData?.phone }} />;
+        return <SeguimientosCrud config={seguimientosConfig} queryParams={{ e164: userData?.phone }} />;
       default:
         return <Inicio setCurrentTab={setCurrentTab} />;
     }

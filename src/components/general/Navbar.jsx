@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Menu, Calendar, User, Bell } from "lucide-react";
+import { Menu, Calendar, User, Bell, LogOut } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Navbar({ currentTab, isSidebarOpen, setIsSidebarOpen }) {
+  const { logout, userData } = useAuth();
   const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {
@@ -51,12 +53,29 @@ export default function Navbar({ currentTab, isSidebarOpen, setIsSidebarOpen }) 
           <span className="notification-badge-dot"></span>
         </button>*/}
 
-        <div className="navbar-profile">
-          <div className="profile-avatar">JC</div>
-          <div className="profile-meta">
-            <span className="profile-user-name">Jecc Obras</span>
-            <span className="profile-user-role">Administrador</span>
+        <div className="navbar-profile" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="profile-meta">
+              <span className="profile-user-name">{userData?.phone}</span>
+              <span className="profile-user-role">Administrador</span>
+            </div>
           </div>
+          <button
+            onClick={logout}
+            className="btn btn-ghost btn-icon-only"
+            title="Cerrar sesión"
+            style={{
+              marginLeft: '0.25rem',
+              color: 'var(--text-secondary)',
+              padding: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '8px'
+            }}
+          >
+            <LogOut size={20} className="text-danger" />
+          </button>
         </div>
       </div>
     </header>

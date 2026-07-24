@@ -4,7 +4,7 @@ import { setAuthContextData } from '../helper/axiosHelper';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState({ phone: "573132284321", access_token: "123", refresh_token: "123" });
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
@@ -19,8 +19,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setUserData(null);
         setIsAuthenticated(false);
-        localStorage.removeItem('token');
-        window.location.href = '/';
+        window.location.reload();
     };
 
     return (

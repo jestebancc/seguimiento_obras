@@ -4,8 +4,7 @@ import Modal from "./Modal";
 import ConfirmDialog from "./ConfirmDialog";
 
 // Helper to handle local storage fallback for trackings
-import { loadTrackings, saveTrackings } from "../utils/dummyData";
-import api from '../helper/axiosHelper';
+import api from '../../helper/axiosHelper';
 
 export default function ComponenteCrud({ config, queryParams = {} }) {
   const { title, endpoint, columns, fields } = config;

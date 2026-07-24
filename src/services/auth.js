@@ -21,6 +21,7 @@ export const verifyAuthCode = async (phone, code) => {
     }
 }
 
+//
 export const refreshTokenSession = async (refreshToken) => {
     try {
         const response = await axios.post(`${import.meta.env.VITE_KEYCLOAK_API_URL}/${import.meta.env.VITE_KEYCLOAK_REALM}/${import.meta.env.VITE_KEYCLOAK_CLIENT_ID}/validate-session`, { refreshToken: refreshToken });
