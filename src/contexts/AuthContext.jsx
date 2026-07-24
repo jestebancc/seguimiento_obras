@@ -4,7 +4,7 @@ import { setAuthContextData } from '../helper/axiosHelper';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [userData, setUserData] = useState({ phone: "573132284321", access_token: "123", refresh_token: "123" });
+    const [userData, setUserData] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
