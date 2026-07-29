@@ -5,13 +5,15 @@ import { toast } from 'react-toastify';
 
 export default function Login({ onLogin }) {
   const [step, setStep] = useState(1);
+  const [countryCode, setCountryCode] = useState("57");
   const [whatsapp, setWhatsapp] = useState("");
   const [code, setCode] = useState("");
 
   const handleSendCode = async (e) => {
     e.preventDefault();
     if (whatsapp) {
-      let respGenerateCode = await generateAuthCode(whatsapp);
+      const fullPhone = `${countryCode}${whatsapp}`;
+      let respGenerateCode = await generateAuthCode(fullPhone);
 
       if (respGenerateCode?.success == true) {
         setStep(2);
@@ -24,11 +26,12 @@ export default function Login({ onLogin }) {
   const handleVerifyCode = async (e) => {
     e.preventDefault();
     if (whatsapp && code) {
-      let respVerifyCode = await verifyAuthCode(whatsapp, code);
+      const fullPhone = `${countryCode}${whatsapp}`;
+      let respVerifyCode = await verifyAuthCode(fullPhone, code);
 
       if (respVerifyCode?.success == true) {
         const newUserData = {
-          phone: whatsapp,
+          phone: fullPhone,
           ...respVerifyCode
         };
 
@@ -56,16 +59,26 @@ export default function Login({ onLogin }) {
           <form onSubmit={handleSendCode} className="login-form">
             <div className="form-group">
               <label>Número de WhatsApp</label>
-              <div className="input-with-icon">
-                <Phone className="input-icon" size={18} />
-                <input
-                  type="tel"
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <select
                   className="form-control"
-                  placeholder="Ej: +51 987 654 321"
-                  value={whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
-                  required
-                />
+                  value={countryCode}
+                  onChange={(e) => setCountryCode(e.target.value)}
+                  style={{ width: '120px', padding: '0.75rem' }}
+                >
+                  <option value="+57">🇨🇴 +57</option>
+                </select>
+                <div className="input-with-icon" style={{ flex: 1 }}>
+                  <Phone className="input-icon" size={18} />
+                  <input
+                    type="tel"
+                    className="form-control"
+                    placeholder="Ej: 300 123 4567"
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
             </div>
 
@@ -90,7 +103,7 @@ export default function Login({ onLogin }) {
                 />
               </div>
               <small style={{ color: "var(--text-secondary)", marginTop: "0.5rem", display: "block" }}>
-                Se envió un código al número {whatsapp}
+                Se envió un código al número {countryCode} {whatsapp}
               </small>
             </div>
 
